@@ -3,15 +3,31 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 
 import Row from '../Row/Row'
-import { arrAlphabet } from '../../utils/constants'
+import { arrAlphabet, maxCols, maxRows } from '../../utils/constants'
 
 const StyledTable = styled.table`
   border: 1px solid var(--pattens-blue);
   border-collapse: collapse;
 `
 
+const StyledMessage = styled.div`
+  font-weight: 400;
+  margin-top: 25px;
+`
+
 const Table = ({ nCols, nRows }) => {
   const [ data, setData ] = useState({})
+  let messages = []
+
+  if ( nCols > maxCols ) {
+    nCols = maxCols
+    messages.push(`The maximum number of columns is ${maxCols}`)
+  }
+
+  if ( nRows > maxRows ) {
+    nRows = maxRows
+    messages.push(`The maximum number of rows is ${maxRows}`)
+  }
 
   const handleChangeCell = ({ col, row }, value) => {
     const modifiedData = { ...data }
@@ -27,6 +43,7 @@ const Table = ({ nCols, nRows }) => {
   }
 
   return (
+    <>
     <StyledTable>
       <tbody>
       { [ ...Array( nRows + 1 ).keys() ]
@@ -44,8 +61,12 @@ const Table = ({ nCols, nRows }) => {
         })
       }
       </tbody>
-
     </StyledTable>
+
+    <StyledMessage>
+        {messages.map((message, i) => <p key={i}>{ message }</p>)}
+      </StyledMessage>
+    </>
   )
 }
 

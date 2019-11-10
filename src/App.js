@@ -1,9 +1,12 @@
 import React from 'react'
+import Table from './components/Table/Table'
+
+import './index.css'
 
 function App() {
   return (
     <div className="App">
-      Init app
+      <Table nCols={4} nRows={4} />
     </div>
   )
 }

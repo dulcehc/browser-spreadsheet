@@ -51,6 +51,7 @@ const Cell = ({ numCol, numRow, onChangedValue, value }) => {
     if ( value.slice(0, 1) === '=' ) {
       value = operations.cleanExpression(value)
       if ( operations.isValidOperation(value) ) {
+        /* eslint no-eval: 0 */
         value = eval(value)
       } else {
         value = '#INVALID!'

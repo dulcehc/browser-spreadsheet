@@ -1,13 +1,17 @@
 import React from 'react'
 import Table from './components/Table/Table'
+import styled from 'styled-components'
 
 import './index.css'
 
+const StyledApp = styled.div`
+  overflow: auto;
+`
 function App() {
   return (
-    <div className="App">
-      <Table nCols={4} nRows={4} />
-    </div>
+    <StyledApp>
+      <Table nCols={5} nRows={5} />
+    </StyledApp>
   )
 }
 

@@ -10,7 +10,8 @@ const StyledApp = styled.div`
 function App() {
   return (
     <StyledApp>
-      <Table nCols={5} nRows={5} />
+      {/** Cols A ~ Z, Rows 1 ~ 50 */}
+      <Table nCols={26} nRows={50} />
     </StyledApp>
   )
 }

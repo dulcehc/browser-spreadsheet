@@ -57,4 +57,15 @@ describe('Cell operations', () => {
     expect( evaluateExpression(formula, data) ).toBe( 5 )
   })
 
+  test('should accept lowercase for the name of the cols', () => {
+    const formula = '=c1/2+B3'
+    const data = {
+      1: {B: 'A1', A: '10', C: '20'},
+      2: {B: '=B1+2', C: '=1*67'},
+      3: {B: '40', D: '=A1+B3+C1'}
+    }
+    // 20/2 + 40
+    expect( evaluateExpression(formula, data) ).toBe( 50 )
+  })
+
 })

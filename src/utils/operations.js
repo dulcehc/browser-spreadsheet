@@ -29,7 +29,8 @@ export const evaluateExpression = ( value, data ) => {
           if ( i % 2 === 0) {
             // Replace the name of the column with the value that contains
             if ( data[element.charAt(1)] ) {
-              const cellData = data[element.charAt(1)][element.charAt(0)]
+              const colName = element.charAt(0).toUpperCase()
+              const cellData = data[element.charAt(1)][colName]
 
               if ( cellData ) {
                 // replace value in original array
@@ -48,6 +49,7 @@ export const evaluateExpression = ( value, data ) => {
         }
 
         const stringOperation = arrOperation.join('')
+
         // Evaluate string after replacing all the formula with numbers
         if ( isValidOperation( stringOperation ) ) {
           value = eval( stringOperation )

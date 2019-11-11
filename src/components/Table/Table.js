@@ -56,6 +56,7 @@ const Table = ({ nCols, nRows }) => {
               numRow={i}
               numCols={nCols + 1}
               rowData={rowData}
+              data={data}
             />
           )
         })

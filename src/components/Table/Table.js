@@ -4,6 +4,7 @@ import styled from 'styled-components'
 
 import Row from '../Row/Row'
 import { arrAlphabet, maxCols, maxRows } from '../../utils/constants'
+import { splitOperation } from '../../utils/operations'
 
 const StyledTable = styled.table`
   border: 1px solid var(--pattens-blue);
@@ -36,6 +37,11 @@ const Table = ({ nCols, nRows }) => {
     }
 
     if( value ) {
+      // Remove equal sign when it's a single value
+      if ( splitOperation(value).length === 1 && value.charAt(0) === '=' ) {
+        value = value.substr(1)
+      }
+
       col = arrAlphabet[col]
       modifiedData[row][col] = value
       setData( modifiedData )

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 
 import { arrAlphabet } from '../../utils/constants'
-import * as operations from '../../utils/operations'
+import { evaluateExpression } from '../../utils/operations'
 
 const StyledCell = styled.td`
   input {
@@ -37,54 +37,7 @@ const Cell = ({ numCol, numRow, onChangedValue, value, data }) => {
       value,
     )
 
-    setResult( evaluateExpression( value ) )
-  }
-
-  const evaluateExpression = value => {
-    if ( value.slice(0, 1) === '=' ) {
-      value = operations.cleanExpression(value)
-      if ( operations.isValidOperation(value) ) {
-        /* eslint no-eval: 0 */
-        // There is a previous validation to execute it only when it's a formula
-        value = eval(value)
-      } else {
-        const arrOperation = operations.splitOperation(value)
-
-        // Get the operating elements, which are even in the array
-        // and check if all of them are valid
-        const validFormula = arrOperation
-          .filter( ( element, i ) => i % 2 === 0)
-          .every( name => operations.isValidNameCell(name) || !isNaN(name) )
-
-        if ( validFormula ) {
-          for ( const [ i, element ] of arrOperation.entries() ) {
-            if ( i % 2 === 0) {
-              // Replace the name of the column with the value that contains
-              if ( data[element.charAt(1)] ) {
-                const cellData = data[element.charAt(1)][element.charAt(0)]
-
-                if ( cellData ) {
-                  // replace value in original array
-                  arrOperation[i] = cellData
-                } else {
-                  // cellData is undefined and does not contain a value
-                  return '#ERROR!'
-                }
-              } else {
-                // There is not data for the
-                return '#ERROR!'
-              }
-            }
-          }
-          // Evaluate after replacing the formula with values
-          value = eval(arrOperation.join(''))
-        } else {
-          value = '#INVALID!'
-        }
-      }
-    }
-
-    return value
+    setResult( evaluateExpression( value, data ) )
   }
 
   return (
@@ -127,6 +80,10 @@ Cell.propTypes = {
    * Data from all the table.
    */
   data: PropTypes.object,
+}
+
+Cell.defaultProps = {
+  data: {}
 }
 
 export default Cell

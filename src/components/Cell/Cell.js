@@ -20,19 +20,13 @@ const StyledCell = styled.td`
     cursor: pointer;
   }
 `
-const Cell = ({ numCol, numRow, onChangedValue, value }) => {
+const Cell = ({ numCol, numRow, onChangedValue, value, data }) => {
   const [ newValue, setNewValue ] = useState(value)
   const [ result, setResult ] = useState(null)
 
-  const onChange = e => {
-    console.log('on change: ', e.target.value)
-    setNewValue(e.target.value)
-  }
+  const onChange = e => setNewValue(e.target.value)
 
-  const onBlur = e => {
-    console.log('on blur: ', e.target.value)
-    hasNewValue(e.target.value)
-  }
+  const onBlur = e => hasNewValue(e.target.value)
 
   const hasNewValue = value => {
     onChangedValue(
@@ -47,16 +41,49 @@ const Cell = ({ numCol, numRow, onChangedValue, value }) => {
   }
 
   const evaluateExpression = value => {
-    console.log('evaluate expression: ', value)
     if ( value.slice(0, 1) === '=' ) {
       value = operations.cleanExpression(value)
       if ( operations.isValidOperation(value) ) {
         /* eslint no-eval: 0 */
+        // There is a previous validation to execute it only when it's a formula
         value = eval(value)
       } else {
-        value = '#INVALID!'
+        const arrOperation = operations.splitOperation(value)
+
+        // Get the operating elements, which are even in the array
+        // and check if all of them are valid
+        const validFormula = arrOperation
+          .filter( ( element, i ) => i % 2 === 0)
+          .every( name => operations.isValidNameCell(name) || !isNaN(name) )
+
+        if ( validFormula ) {
+          for ( const [ i, element ] of arrOperation.entries() ) {
+            if ( i % 2 === 0) {
+              // Replace the name of the column with the value that contains
+              if ( data[element.charAt(1)] ) {
+                const cellData = data[element.charAt(1)][element.charAt(0)]
+
+                if ( cellData ) {
+                  // replace value in original array
+                  arrOperation[i] = cellData
+                } else {
+                  // cellData is undefined and does not contain a value
+                  return '#ERROR!'
+                }
+              } else {
+                // There is not data for the
+                return '#ERROR!'
+              }
+            }
+          }
+          // Evaluate after replacing the formula with values
+          value = eval(arrOperation.join(''))
+        } else {
+          value = '#INVALID!'
+        }
       }
     }
+
     return value
   }
 
@@ -96,6 +123,10 @@ Cell.propTypes = {
    * Value for the cell.
    */
   value: PropTypes.string,
+  /**
+   * Data from all the table.
+   */
+  data: PropTypes.object,
 }
 
 export default Cell

@@ -30,7 +30,7 @@ const StyledRow = styled.tr`
   }
 `
 
-const Row = ({ numCols, numRow, onChangeCell, rowData }) => {
+const Row = ({ numCols, numRow, onChangeCell, rowData, data }) => {
   return (
     <StyledRow>
       { [ ...Array( numCols ).keys() ]
@@ -41,6 +41,7 @@ const Row = ({ numCols, numRow, onChangeCell, rowData }) => {
               numCol={i}
               onChangedValue={onChangeCell}
               value={rowData[i] || ''}
+              data={data}
             />
           )
       }

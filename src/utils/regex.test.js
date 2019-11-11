@@ -1,6 +1,6 @@
-import { validExpression } from './regex';
+import { validExpression, nameCell } from './regex';
 
-describe('Regex arithmetic expression', () => {
+describe('Regex expressions', () => {
   test('should match the sum of two numbers', () => {
     const sum = '1+2'
     expect(validExpression.test(sum)).toBe(true);
@@ -19,5 +19,15 @@ describe('Regex arithmetic expression', () => {
   test('should match an expression with decimal values', () => {
     const decimal = '10.5*3'
     expect(validExpression.test(decimal)).toBe(true);
+  })
+
+  test('should accept A1 as valid cell name', () => {
+    const name = 'A1'
+    expect(nameCell.test(name)).toBe(true);
+  })
+
+  test('should accept Z52 as invalid cell name', () => {
+    const name = 'Z52'
+    expect(nameCell.test(name)).toBe(false);
   })
 })
